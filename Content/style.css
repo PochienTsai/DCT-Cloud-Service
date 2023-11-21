@@ -1,11 +1,14 @@
 .swiper {
   width: 100%;
   height: 100vh;
-  /* 設定高度為視窗的 90% */
+  /* 設定高度為視窗的 100% */
 }
 
 .swiper-slide img {
   width: 100%;
+  /* 設定寬度為視窗的 100% */
   height: 100%;
+  /* 設定圖片為視窗的 100% */
   display: block;
+  /* 設定圖片為區塊 */
 }
