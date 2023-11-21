@@ -1,0 +1,211 @@
+﻿@*@{
+        ViewBag.Title = "Home Page";
+    }
+
+    <div class="jumbotron">
+        <h1>ASP.NET</h1>
+        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+        <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Getting started</h2>
+            <p>
+                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                enables a clean separation of concerns and gives you full control over markup
+                for enjoyable, agile development.
+            </p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Get more libraries</h2>
+            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Web Hosting</h2>
+            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        </div>
+    </div>*@
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon"
+          type="image/x-icon"
+          href="../../Resource/Home/icon/favicon.ico" />
+    <!-- <link rel="icon" type="image/x-icon" href="pic/icon/favicon.ico" /> -->
+    <link rel="stylesheet" href="../../Content/swiperr-11.0.4-bundle.min.css" />
+    <link rel="stylesheet" href="../../Content/bootstrap-5.3.2.min.css" />
+    <link rel="stylesheet" href="../../Content/style.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /> -->
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    /> -->
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <title>DCT Cloud Service</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fs-5" href="#">
+                <!-- <img src="/pic/logo" alt="" width="30" height="24" class="d-inline-block align-text-top"> -->
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="32"
+                     height="32"
+                     fill="currentColor"
+                     class="bi bi-cloud-fill"
+                     viewBox="0 0 16 16">
+                    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z" />
+                </svg>
+                DCT Cloud Service
+            </a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5">
+                    <li class="nav-item ms-5 dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="productsDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">
+                            DCT產品
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                            <li><a class="dropdown-item" href="#">測試機</a></li>
+                            <li><a class="dropdown-item" href="#">配件</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="#">DCT測試手法</a>
+                    </li>
+                    <li class="nav-item ms-2 dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="toolsDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">
+                            DCT工具
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="toolsDropdown">
+                            <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="#">DOE on the fly</a></li>
+                            <li><a class="dropdown-item" href="#">DCT 機台健檢</a></li>
+                            <li>
+                                <a class="dropdown-item" href="#">Production Monitor</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Universal Search Engine</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#">DCT Server健檢</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a class="nav-link" href="#">聯絡資訊</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="18"
+                                 height="18"
+                                 fill="currentColor"
+                                 class="bi bi-messenger"
+                                 viewBox="0 0 16 16"
+                                 data-bs-toggle="tooltip"
+                                 data-bs-placement="bottom"
+                                 title="智能客服">
+                                <path d="M0 7.76C0 3.301 3.493 0 8 0s8 3.301 8 7.76-3.493 7.76-8 7.76c-.81 0-1.586-.107-2.316-.307a.639.639 0 0 0-.427.03l-1.588.702a.64.64 0 0 1-.898-.566l-.044-1.423a.639.639 0 0 0-.215-.456C.956 12.108 0 10.092 0 7.76zm5.546-1.459-2.35 3.728c-.225.358.214.761.551.506l2.525-1.916a.48.48 0 0 1 .578-.002l1.869 1.402a1.2 1.2 0 0 0 1.735-.32l2.35-3.728c.226-.358-.214-.761-.551-.506L9.728 7.381a.48.48 0 0 1-.578.002L7.281 5.98a1.2 1.2 0 0 0-1.735.32z" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="nav-item me-5 dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           id="userDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-haspopup="true"
+                           aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24"
+                                 height="24"
+                                 fill="currentColor"
+                                 class="bi bi-person-fill"
+                                 viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                            </svg>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#">我的帳號</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item" href="#">登入</a></li>
+                            <li><a class="dropdown-item" href="#">註冊</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">
+                <img src="../../Resource/Home/toystory.jpg" alt="" />
+            </div>
+            <div class="swiper-slide">
+                <img src="../../Resource/Home/up.jpg" alt="" />
+            </div>
+            <div class="swiper-slide">
+                <img src="../../Resource/Home/walle.jpg" alt="" />
+            </div>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+
+    <!-- 引入 Bootstrap 和其他必要的 JavaScript 庫 -->
+    <script src="../../Scripts/jquery-3.7.1.min.js"></script>
+    <script src="../../Scripts/bootstrap-5.3.2.bundle.min.js"></script>
+    <script src="../../Scripts/swiper-11.0.4-bundle.min.js"></script>
+    <script src="../../Scripts/index.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="index.js"></script> -->
+</body>
+</html>

@@ -1,0 +1,511 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_DashboardMenu.cshtml";
+}
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FailPinRate</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link href="https://cdn.datatables.net/1.11.2/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.11.2/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <!-- 畫圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JQuery Multi Select 多選下拉式選單 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.dataTables.min.css">
+
+    <!-- DataTables JavaScript -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Buttons CSS -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+
+    <!-- Buttons JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.bundle.js"></script>
+</head>
+
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- 主內容 -->
+    <div class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Fail Pin</h1>
+
+            <div class="d-sm-flex align-items-center justify-content-end mb-0">
+
+                <div class="row align-items-center">
+                    <!-- <div class="col-2">
+                        <div class="Class_RichTest_JQuery_MultiSelect"></div>
+                    </div>
+                    <div class="col-2">
+                        <div class="Class_RichTest1_JQuery_MultiSelect"></div>
+                    </div> -->
+
+                    <div class="col-2">
+                        <div class="JQuery_MultiSelect_Lotinfo"></div>
+                    </div>
+                    <div class="col-2">
+                        <div class="JQuery_MultiSelect_Mode"></div>
+                    </div>
+
+                    <div class="col-3">
+                        <label for="date-input">開始時間: </label>
+                        <input type="date" id="date-input" name="date">
+                    </div>
+                    <div class="col-3">
+                        <label for="date-output">結束時間: </label>
+                        <input type="date" id="date-output" name="date">
+                    </div>
+                    <div class="col-2">
+                        <button id="btnDataTable" class="ml-3">搜尋</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁面內容 -->
+
+        <div class="row">
+            <!-- Sales Chart -->
+            <div class="col-md-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Overall Fail
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="pieChart1" height="315"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total</h5>
+                        <p class="card-text">125,000</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Open</h5>
+                        <p class="card-text">350</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Short</h5>
+                        <p class="card-text">350</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Leakage</h5>
+                        <p class="card-text">350</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="chart2" width="300" height="330"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="table1" class="table table-bordered" style="width:100%">
+                            <!-- Table 1 Content Goes Here -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Total
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chart3" width="300" height="330"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Open
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chart4" width="300" height="330"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Short
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chart5" width="300" height="330"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        List By Fail Pin Combination
+                    </div>
+                    <div class="card-body">
+                        <table id="table2" class="table table-bordered"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        List By Fail DUT
+                    </div>
+                    <div class="card-body">
+                        <table id="table3" class="table table-bordered"></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        List By Fail Pin
+                    </div>
+                    <div class="card-body">
+                        <table id="table4" class="table table-bordered"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+        // Function to generate random data
+        function generateRandomData(rows) {
+            var data = [];
+            for (var i = 1; i <= rows; i++) {
+                data.push([i, 'Name ' + i, 'Email' + i + 'example.com', '123-456-' + (1000 + i), '123-456-' + (1000 + i)]);
+            }
+            return data;
+        }
+
+        // lotinfo
+        function JQuery_MultiSelect_DropdownGeneral(Title, DropdownID, ClassID, element_parameter) {
+
+            var dateInput = document.getElementById("date-input").value;
+            console.log(dateInput);
+            var dateOutput = document.getElementById("date-output").value;
+            console.log(dateOutput);
+
+            DataSize = "10000";
+
+            var params = {
+                Date1: dateInput,
+                Date2: dateOutput,
+                size: DataSize,
+            };
+
+            console.log("Parameter: " + $.param(params));
+
+            var newClass = $('<h5>' + Title + '</h5><select id=' + DropdownID + ' multiple="multiple"></select>');
+            $('.' + ClassID).append(newClass);
+
+            // 取得下拉式選單容器元素
+            var dropdownContainer = document.getElementById(DropdownID);
+
+            // 清空checkboxlist裡面的選項
+            dropdownContainer.innerHTML = "";
+
+            var URL = "https://dct_tester.kh.asegroup.com:59102/api/failpin/getinfo?"
+
+            $.ajax({
+                url: URL + $.param(params), // 要請求的 API 網址
+                type: "GET",
+                dataType: "json", // 回傳的資料類型是 JSON 格式
+                success: function (data) {
+
+                    console.log(data);
+
+                    var elementSet = {}; // 建立一個空物件，用於記錄已經出現過的元素
+                    $.each(data.data, function (index, element) {
+                        var value = element[element_parameter];
+                        if (!elementSet[value]) { // 如果該元素還沒有被記錄過
+                            elementSet[value] = true; // 將該元素標記為已經出現過
+                            var option = document.createElement('option');
+                            option.value = value;
+                            option.text = value;
+                            dropdownContainer.appendChild(option);
+                            //console.log(option);
+                        }
+                    });
+
+                    // JQuery Multi Select
+                    $('#' + DropdownID).multiselect({
+                        // Bootstrap 5 compatibility -> Solve Bootstrap 5 multi select problem
+                        templates: {
+                            button: '<button type="button" class="multiselect dropdown-toggle btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+                        },
+                        enableFiltering: true, // 啟用搜尋功能
+                        includeSelectAllOption: true, // 啟用全選/全取消功能
+                        enableCaseInsensitiveFiltering: true, // 啟用大小寫不敏感的搜尋
+                        selectAllText: '全選', // 全選按鈕的文字
+                        selectAllValue: 'multiselect-all', // 全選按鈕的值
+                        filterPlaceholder: '搜尋', // 搜尋框的提示文字
+                        nonSelectedText: '未選擇', // 沒有選中任何選項時的提示文字
+                        allSelectedText: '全部選擇', // 全部選中時的提示文字
+                        //autoWidth: true, // 啟用自動調整寬度功能
+                        maxHeight: 500, //設置選項的最大高度
+                        buttonWidth: '150px',
+                    });
+
+                    // 預設全選並更新項目
+                    $('#' + DropdownID).multiselect('selectAll', false);
+                    $('#' + DropdownID).multiselect('updateButtonText');
+
+                },
+                error: function (xhr, status, error) {
+                    // 當請求失敗時，顯示錯誤訊息
+                    //$("#table-container").text("請求失敗：" + error);
+                    dropdownContainer.innerHTML = "";
+                }
+            });
+        }
+
+        // 取得今天日期
+        var today = new Date();
+        // 往前推算一個月
+        var oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        // 將日期格式轉換為 YYYY-MM-DD 的字串格式
+        var todayStr = today.toISOString().slice(0, 10);
+        var oneMonthAgoStr = oneMonthAgo.toISOString().slice(0, 10);
+        // 將日期填入對應的輸入框中
+        document.getElementById("date-input").value = oneMonthAgoStr;
+        document.getElementById("date-output").value = todayStr;
+
+        JQuery_MultiSelect_DropdownGeneral("Lot", "LotInfo-options", "JQuery_MultiSelect_Lotinfo", "ao_lot");
+        JQuery_MultiSelect_DropdownGeneral("mode", "Mode-options", "JQuery_MultiSelect_Mode", "mode");
+
+        var data1 = generateRandomData(100);
+        var data2 = generateRandomData(100);
+        var data3 = generateRandomData(100);
+        var data4 = generateRandomData(100);
+
+        // Create DataTable for table1
+        $('#table1').DataTable({
+            data: data1,
+            paging: false, // Disable pagination
+            scrollY: 200, // Set fixed height for vertical scroll
+            scrollCollapse: true,
+            columns: [
+                { title: 'ID' },
+                { title: 'Name' },
+                { title: 'Email' },
+                { title: 'Phone' },
+                { title: 'Phone' }
+            ]
+        });
+
+        var pieChart1 = new Chart(document.getElementById('pieChart1'), {
+            type: 'pie',
+            data: {
+                labels: ['Open', 'Short', 'Leakage'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false
+            }
+        });
+
+        var ctx2 = document.getElementById('chart2').getContext('2d');
+        var chart2 = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['Fail A', 'Fail B', 'Fail C', 'Fail D', 'Fail E',
+                    'Fail F', 'Fail G', 'Fail H', 'Fail I', 'Fail J',
+                    'Fail K', 'Fail L', 'Fail M', 'Fail N', 'Fail O',
+                    'Fail P', 'Fail Q', 'Fail R', 'Fail S', 'Fail T',
+                    'Fail U', 'Fail V', 'Fail W', 'Fail X', 'Fail Y',
+                    'Fail Z', 'Fail AA', 'Fail AB', 'Fail AC', 'Fail AD',],
+                datasets: [{
+                    data: [30, 15, 25, 20, 10,
+                        30, 15, 25, 20, 10,
+                        30, 15, 25, 20, 10,
+                        30, 15, 25, 20, 10,
+                        30, 15, 25, 20, 10,
+                        30, 15, 25, 20, 10],
+
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            }
+        });
+
+        var ctx3 = document.getElementById('chart3').getContext('2d');
+        var chart3 = new Chart(ctx3, {
+            type: 'pie',
+            data: {
+                labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'],
+                datasets: [{
+                    data: [30, 15, 25, 20, 10],
+                    backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            }
+        });
+
+        var ctx4 = document.getElementById('chart4').getContext('2d');
+        var chart4 = new Chart(ctx4, {
+            type: 'pie',
+            data: {
+                labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'],
+                datasets: [{
+                    data: [30, 15, 25, 20, 10],
+                    backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            }
+        });
+
+        var ctx5 = document.getElementById('chart5').getContext('2d');
+        var chart5 = new Chart(ctx5, {
+            type: 'pie',
+            data: {
+                labels: ['Category A', 'Category B', 'Category C', 'Category D', 'Category E'],
+                datasets: [{
+                    data: [30, 15, 25, 20, 10],
+                    backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            }
+        });
+
+
+        // Create DataTable for table1
+        $('#table2').DataTable({
+            data: data2,
+            paging: false, // Disable pagination
+            scrollY: 200, // Set fixed height for vertical scroll
+            scrollCollapse: true,
+            columns: [
+                { title: 'ID' },
+                { title: 'Name' }
+            ]
+        });
+
+        // Create DataTable for table2
+        $('#table3').DataTable({
+            data: data3,
+            paging: false, // Disable pagination
+            scrollY: 200, // Set fixed height for vertical scroll
+            scrollCollapse: true,
+            columns: [
+                { title: 'ID' },
+                { title: 'Name' },
+                { title: 'Email' },
+                { title: 'Phone' }
+            ]
+        });
+
+        // Create DataTable for table3
+        $('#table4').DataTable({
+            data: data4,
+            paging: false, // Disable pagination
+            scrollY: 200, // Set fixed height for vertical scroll
+            scrollCollapse: true,
+            columns: [
+                { title: 'ID' },
+                { title: 'Name' },
+                { title: 'Email' },
+                { title: 'Phone' },
+                { title: 'Phone' }
+            ]
+        });
+
+</script>

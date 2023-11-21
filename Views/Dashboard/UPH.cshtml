@@ -1,0 +1,509 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_DashboardMenu.cshtml";
+}
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPH Diff</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.2/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<!-- 主內容 -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">UPH Diff</h1>
+
+        <div class="d-sm-flex align-items-center justify-content-end mb-0">
+
+            <label class="mr-6 mb-0 justify-content-start text-monospace"
+                   for="ThresholdInput">Threshold(%)：</label>
+            <input class="form-control justify-content-start" style="width: 100px;"
+                   id="ThresholdInput" type="text">
+
+
+            <label class="mr-2 mb-0 justify-content-start text-monospace" style="width: 90px;"
+                   for="startDatetimeInput">開始時間：</label>
+            <input class="form-control justify-content-start flex-grow-1" style="width: 150px;"
+                   id="startDatetimeInput" type="date" value='2023-08-01'>
+
+
+            <label class="mr-2 mb-0 col-form-label" style="width: 90px;"
+                   for="endDatetimeInput">截止時間：</label>
+            <input class="form-control" style="width: 150px;" id="endDatetimeInput" type="date"
+                   value='2023-08-07'>
+
+            <button class="btn btn-primary ml-4" id="searchButton">搜尋</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 畫長條圖 -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">UPH</div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart">
+                            <div id="yearlyLoader"></div>
+                            <canvas id="yearlyChart" width="400" height="360"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row"></div>
+    <!-- 表格資料-->
+    <table class="table table-striped table-bordered" id="dataTable" style="width:100%">
+        <thead>
+            <tr>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+                <th>Column</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+            </tr>
+            <tr>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+            </tr>
+            <tr>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+                <td>Null</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Root Cause Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-content"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+        // 取得今天日期
+        var today = new Date();
+        // 往前推算一個月
+        var oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        // 將日期格式轉換為 YYYY-MM-DD 的字串格式
+        var todayStr = today.toISOString().slice(0, 10);
+        var oneMonthAgoStr = oneMonthAgo.toISOString().slice(0, 10);
+        // 將日期填入對應的輸入框中
+        document.getElementById("startDatetimeInput").value = oneMonthAgoStr;
+        document.getElementById("endDatetimeInput").value = todayStr;
+
+        // Threshold Default Value
+        document.getElementById("ThresholdInput").value = 60;
+
+        // 初始化資料表
+        var dataTable = $('#dataTable').DataTable();
+        // var dataTable;
+
+        // dataTable搜尋功能
+        $('#searchInput').keyup(function () {
+            dataTable.search($(this).val()).draw();
+        });
+
+        // 要排除的關鍵字
+        var excludeKeys = ['Program_path', 'BestPath', 'lowPuiVersion', 'lowLibVersion', 'lowVIVersion', 'BestLibray', 'BestVI','BestPUI'];
+
+        // 建立一個空的標籤和數值陣列
+        var UPH_labels = [];
+        var UPH_values = [];
+        var UPH_Column = [];
+        var _columns = [];
+        var newRowData = {}; // 新的物件
+
+        // 確認輸入型態是否正確,皆正確為1;則一不正確為0
+        var checkInputTypeFlag = 0;
+
+        // 確認輸入資料是否重複,重複為1;沒重複為0 --> 避免按太快Request過多
+        var checkSameValueFlag = 0;
+
+        // 判斷按鈕是否被按下 --> 預防User按太快造成API Request過多
+        var isSearchButtonClicked = false;
+
+        //
+        const ctx1 = document.getElementById('yearlyChart').getContext('2d');
+
+        //  初始化圖表
+        var myChart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: UPH_labels,
+                datasets: [{
+                    label: 'Abnormal UPH Qty',
+                    data: UPH_values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var myValue = 1000; // 假設這是要檢查的數值
+
+        // 按下搜尋按鈕事件
+        $('#searchButton').click(function () {
+
+            // if (myValue > 100) {
+            //     showAlert("Value is so high!");
+            // } else if (myValue < 0) {
+            //     showAlert("Value is too low!");
+            // }
+
+
+
+            var startDatetime = $('#startDatetimeInput').val();
+            var endDatetime = $('#endDatetimeInput').val();
+            var thresholdVal = $('#ThresholdInput').val();
+            var DataSize = 100;
+
+            // 確認輸入參數
+            console.log('Start Datetime:', startDatetime);
+            console.log('End Datetime:', endDatetime);
+            console.log('Threshold:', thresholdVal);
+
+            // 判斷輸入參數是否為空值與非數值及數值超過範圍
+            // 若都正常為1;則一異常為0
+            if (startDatetime === '' || endDatetime === '') {
+                alert("請選擇分析時間");
+                checkInputTypeFlag = 0;
+            } else if (isNotANumber(thresholdVal)) {
+                alert("請輸入正確閥值資訊 ex:50");
+                checkInputTypeFlag = 0;
+            } else if (isOverNumber(thresholdVal)) {
+                alert("輸入閥值超過上限");
+                checkInputTypeFlag = 0;
+            } else {
+                checkInputTypeFlag = 1;
+
+                // 若輸入數值皆正常,則檢查數值是否跟上一次重複
+                var checkSameData = [startDatetime, endDatetime, thresholdVal];
+                if (isSameData(checkSameData)) {
+                    checkSameValueFlag = 1;
+                } else {
+                    checkSameValueFlag = 0;
+                }
+            }
+
+            if (!checkSameValueFlag) {
+                if (checkInputTypeFlag === 1) {
+                    // 清空陣列,不保留上一次的資料
+                    UPH_labels = [];
+                    UPH_values = [];
+                    UPH_Column = [];
+                    _columns = [];
+
+                    var params = {
+                        Threshold: thresholdVal,
+                        Date1: startDatetime,
+                        Date2: endDatetime,
+                        size: DataSize,
+                    };
+
+                    var params1 = {
+                        Threshold: thresholdVal,
+                        Date1: startDatetime,
+                        Date2: endDatetime,
+                        size: 1000,
+                    };
+
+                    var callUPHChartURL = "https://dct_tester.kh.asegroup.com:59102/api/uphapi3?";
+
+                    // 畫圖
+                    $.ajax({
+                        url: callUPHChartURL + $.param(params), // 要請求的 API 網址
+                        type: "GET", // 使用 GET 方法
+                        dataType: "json", // 回傳的資料類型是 JSON 格式
+                        success: function (response) {
+
+                            // 當請求成功時，將回傳的資料顯示在 result 元素中
+                            console.log(response);
+
+                            $.each(response.data, function (index, data) {
+
+                                // 資料塞入陣列
+                                UPH_labels.push(data.lowMachine);
+                                UPH_values.push(data.Abnormal_TP_Qty);
+
+                            });
+
+                            // 銷毀已經創建的圖表
+                            myChart1.destroy();
+
+                            // 繪製圖表1
+                            myChart1 = new Chart(ctx1, {
+                                type: 'bar',
+                                data: {
+                                    labels: UPH_labels,
+                                    datasets: [{
+                                        label: 'Abnormal UPH Qty',
+                                        data: UPH_values,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            title: {
+                                                display: true,
+                                                text: 'AbnormalUPH_Qty'
+                                            }
+                                        },
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: 'Machine'
+                                            }
+                                        }
+                                    }
+
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            // 當請求失敗時，顯示錯誤訊息
+                            alert("請求失敗：" + status + "," + error + "," + URL);
+                        }
+                    });
+
+                    var callallUPHDataURL = "https://dct_tester.kh.asegroup.com:59102/api/alluphapi1?";
+                    //var callallUPHDataURL = "https://dct_tester.kh.asegroup.com:59102/api/uphapi4?";
+                    //var callallUPHDataURL = "http://localhost:59101/api/alluphapi?";
+
+                    var RootCauseBtn = "<button class='btn btn-primary'>RootCause<br>Suggestion</button>";
+
+                    // 表格
+                    $.ajax({
+                        url: callallUPHDataURL + $.param(params1), // 要請求的 API 網址
+                        type: "GET", // 使用 GET 方法
+                        dataType: "json", // 回傳的資料類型是 JSON 格式
+                        success: function (response) {
+
+                            // 當請求成功時，將回傳的資料顯示在 result 元素中
+                            console.log(response);
+
+                            if (dataTable) {
+                                dataTable.destroy(); // 銷毀 DataTables 表格
+                                $('#dataTable').empty(); // 清空表格內容的 HTML
+                                dataTable = null; // 將 table 變數設為 null，表示表格已被銷毀
+                            }
+
+                            // 取得Json的Key Value --> Set DataTable Columns Name
+                            // 判斷回傳有沒有值
+                            if (response.data[0] != null) {
+                                var columns = getJSONKeys(response.data[0], UPH_Column);
+                                if (columns.length > 0) {
+                                    for (var i = 0; i < columns.length; i++) {
+                                        if (excludeKeys.indexOf(columns[i]) === -1) { // 如果不是要排除的關鍵字
+                                            _columns.push({ title: columns[i] });
+                                        }
+                                    }
+                                    _columns.push({ title: "修機建議" });
+                                }
+
+                                // 更新dataTable
+                                dataTable = $('#dataTable').DataTable({
+                                    columns: _columns,
+                                });
+                            }
+                            // 寫入內容
+                            $.each(response.data, function (index, data) {
+                                var rowData = [];
+                                for (var key in data) {
+                                    if (excludeKeys.indexOf(key) === -1) { // 如果不是要排除的關鍵字
+                                        rowData.push(data[key]);
+                                    }
+                                    if (!newRowData[key]) { // 如果新的物件中還沒有這個關鍵字
+                                        newRowData[key] = []; // 新增一個陣列
+                                    }
+                                    newRowData[key].push(data[key]); // 將值加入陣列
+                                }
+                                rowData.push(RootCauseBtn);
+                                dataTable.row.add(rowData);
+                            });
+
+                            // 重新繪製 DataTable
+                            dataTable.draw();
+                        },
+                        error: function (xhr, status, error) {
+                            // 當請求失敗時，顯示錯誤訊息
+                            alert("請求失敗：" + status + "," + error + "," + URL);
+                        }
+                    });
+                }
+            }
+        });
+
+        // Handle button click event to show modal
+        dataTable.on('click', 'button', function () {
+            var Divider = "<br><hr>";
+            var index = dataTable.cell($(this).closest('td')).index().row;
+            console.log("Click: " + index);
+
+            var programPath = newRowData['Program_path'];
+            var best_programPath = newRowData['BestPath'];
+            var uph_arr = newRowData['UPH'];
+            var machine_arr = newRowData['machine'];
+
+            var lowPuiVersion_arr = newRowData['lowPuiVersion'];
+            var lowLibVersion_arr = newRowData['lowLibVersion'];
+            var lowVIVersion_arr = newRowData['lowVIVersion'];
+
+            var BestPUI_arr = newRowData['BestPUI'];
+            var BestLibray_arr = newRowData['BestLibray'];
+            var BestVI_arr = newRowData['BestVI'];
+
+            var content = "lowProtramPath: <br>" + programPath[index];
+            content += Divider;
+            content += "BestProtramPath: <br>" + best_programPath[index];
+            content += Divider;
+            content += "現在軟體版本: <br>low_PUI Version: " + lowPuiVersion_arr[index] + "<br>low_Lib_Version" + lowLibVersion_arr[index] + "<br>low_Virtual Instrument_Version" + lowVIVersion_arr[index];
+            content += Divider;
+            content += "最佳軟體版本: <br>Best_PUI Version: " + BestPUI_arr[index] + "<br>Best_Lib_Version" + BestLibray_arr[index] + "<br>Best_Virtual Instrument_Version" + BestVI_arr[index];
+            content += Divider;
+            if(lowPuiVersion_arr[index] != BestPUI_arr[index] &&
+            lowLibVersion_arr[index] != BestLibray_arr[index] &&
+            lowVIVersion_arr[index] != BestVI_arr[index])
+            {
+                content += "請更新軟體";
+            }
+            else
+            {
+                content += "Root Cause Suggestion 建置中";
+            }
+
+
+            $('#modal-content').html(content);
+            $('#myModal').modal('show');
+        });
+
+        // 判斷輸入數值是否超過範圍
+        function isOverNumber(value) {
+            return value > 100;
+        }
+
+        // 判斷是否為空值或非數字
+        function isNotANumber(value) {
+            return value === '' || isNaN(value);
+        }
+
+        // 延遲指定時間
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+        // 迴圈掃描 Json Key Value
+        // return: array
+        function getJSONKeys(json, keys) {
+            if (typeof json === 'object') {
+                for (var k in json) {
+                    keys.push(k);
+                    getJSONKeys(json[k], keys);
+                }
+            }
+            return keys;
+        }
+
+        var lastData = null; // 記錄上一次的值
+        function isSameData(data) {
+            if (lastData !== null && data.length === lastData.length) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i] !== lastData[i]) {
+                        lastData = data; // 更新上一次的資料
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                lastData = data; // 更新上一次的資料
+                return false;
+            }
+        }
+
+        function showAlert(message) {
+            alert(message);
+        }
+
+</script>

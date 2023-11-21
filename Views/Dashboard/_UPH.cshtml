@@ -1,0 +1,752 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_DashboardMenu.cshtml";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    @*<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.2/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">*@
+
+    <link href="~/Content/Dashboard_UPH_bootstrap_4.3.1.min.css" rel="stylesheet">
+    <link href="~/Content/Dashboard_UPH_dataTables1.11.2.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/Resource/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <title>DCT Dashboard - UPH Diff</title>
+
+    <link rel="icon" href="~/Resource/Dashboard/DCT Dashboard.ico" type="image/x-icon">
+
+    <style>
+        .sidebar {
+            background-color: #e6e6ff;
+            padding: 20px;
+            /* height: 100vh; */
+            height: auto;
+        }
+
+        .sidebar .accordion .card {
+            background-color: #f2f2ff;
+            border: none;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .accordion .card .card-header {
+            background-color: #d9d9ff;
+        }
+
+        .sidebar .accordion .card .card-header button {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .sidebar .accordion .card .card-body ul {
+            margin-bottom: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .chart-container {
+            margin-bottom: 20px;
+            position: relative;
+            /* width: 1900px;
+			height: 1000px; */
+        }
+
+        .chart {
+            min-height: 200px;
+        }
+
+        .date-range-container {
+            margin-bottom: 20px;
+        }
+
+        .date-range-container .form-control {
+            width: 180px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .date-range-container .btn-sm {
+            width: 100px;
+            height: 38px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .loader {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            animation: spin 2s linear infinite;
+        }
+        
+        /*
+        @* 
+            @keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+            *@
+		}*/ 
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 菜單資訊 -->
+            <div class="col-md-2 sidebar">
+                <div class="accordion" id="menuAccordion">
+                    <!-- 登入資訊 -->
+                    <div class="navbar">
+                        <span class="navbar-text" id="username"></span> <button class="btn btn-link nav-link"
+                            id="logoutButton">
+                            <i class="fas fa-sign-out-alt"></i> 登出
+                        </button>
+                    </div>
+                    <!-- 展開-Home -->
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseOne" aria-expanded="true" class="btn btn-link"
+                                    data-target="#collapseOne" data-toggle="collapse" type="button">
+                                    <i class="fas fa-home"></i> Home
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingOne" class="collapse show" data-parent="#menuAccordion"
+                            id="collapseOne">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <!-- <a href="http://localhost:4750/Dashboard/Home"><i class="fas fa-info-circle"></i> DashBoard-Home</a> -->
+                                        <a href="https://dct_tester.kh.asegroup.com:4751/Dashboard/Home"><i
+                                                class="fas fa-info-circle"></i> DashBoard-Home</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Tester Status -->
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseTwo" aria-expanded="false" class="btn btn-link collapsed"
+                                    data-target="#collapseTwo" data-toggle="collapse" type="button">
+                                    <i class="fas fa-users"></i> Tester Status
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingTwo" class="collapse" data-parent="#menuAccordion"
+                            id="collapseTwo">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-building"></i> Tester Healthy Monitor</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-users"></i> UI Healthy Monitor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Production Efficiency -->
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseThree" aria-expanded="false"
+                                    class="btn btn-link collapsed" data-target="#collapseThree" data-toggle="collapse"
+                                    type="button">
+                                    <i class="fas fa-cogs"></i> Production Efficiency
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingThree" class="collapse" data-parent="#menuAccordion"
+                            id="collapseThree">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-laptop"></i> Tester Efficiency Monitor</a>
+                                    </li>
+                                    <li>
+                                        <!-- <a href="http://localhost:4750/Dashboard/UPH"><i class="fas fa-paint-brush"></i> UPH Diff</a> -->
+                                        <a href="https://dct_tester.kh.asegroup.com:4751/Dashboard/UPH"><i
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-bullhorn"></i> Recovery Rate trend(重測過高)</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-FA Info -->
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseFour" aria-expanded="false"
+                                    class="btn btn-link collapsed" data-target="#collapseFour" data-toggle="collapse"
+                                    type="button">
+                                    <i class="fas fa-envelope"></i> FA Info
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingFour" class="collapse" data-parent="#menuAccordion"
+                            id="collapseFour">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-envelope"></i> Fail Pin Rate</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-phone"></i> Yield Diff(不同機台)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Yield Diff(不同Site)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Bin Diff(不同Site)</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Process Stability -->
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseFive" aria-expanded="false"
+                                    class="btn btn-link collapsed" data-target="#collapseFive" data-toggle="collapse"
+                                    type="button">
+                                    <i class="fas fa-envelope"></i> Process Stability
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingFive" class="collapse" data-parent="#menuAccordion"
+                            id="collapseFive">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-envelope"></i> Low Yield</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-phone"></i> Low CP/CPK(lot)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Marginal P/F trend</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Low PPK(lot)(製成穩定度)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fas fa-map-marker-alt"></i> Test Value diff(lot)
+                                            (製成穩定度)
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 主內容 -->
+            <div class="col-md-10 content">
+                <h1>UPH Diff</h1>
+                <div class="date-range-container d-flex justify-content-end">
+                    <label for="ThresholdInput">Threshold(%)：</label>
+                    <input class="form-control" id="ThresholdInput" type="text" value=50>
+                    <label for="startDatetimeInput">開始時間：</label>
+                    <input class="form-control" id="startDatetimeInput" type="date" value='2023-08-01'>
+                    <label for="endDatetimeInput">截止時間：</label>
+                    <input class="form-control" id="endDatetimeInput" type="date" value='2023-08-07'>
+                    <button class="btn btn-primary btn-sm" id="searchButton">搜尋</button>
+                </div>
+
+                <div class="row">
+                    <!-- 畫長條圖 -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">UPH</div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart">
+                                        <!-- <div class="loader" id="yearlyLoader"></div>  -->
+                                        <div id="yearlyLoader"></div>
+                                        <canvas id="yearlyChart" width="400" height="360"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 畫長條圖 -->
+                    <!--<div class="col-12">
+						<div class="chart-container">
+							<div class="chart">
+								@* <div class="loader" id="yearlyLoader"></div> *@
+                                <div id="yearlyLoader"></div>
+								<canvas id="monthlyChart" width="400" height="360"></canvas>
+							</div>
+						</div>
+					</div>-->
+                </div>
+
+                <!-- 表格資料-->
+                <table class="table table-striped table-bordered" id="dataTable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                            <th>Column</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                        </tr>
+                        <tr>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                        </tr>
+                        <tr>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                            <td>Null</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-white">
+        <p class="m-0 text-center text-black" style="font-weight: bold;">Copyright &copy; 2023 ASEGroup-CTRD 5910 All
+            Rights Reserved.</p>
+    </footer>
+</body>
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>*@
+
+<script src="~/Scripts/jquery-2.1.1.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_bootstrap4.3.1.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_jquery_1.11.2.dataTables.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_dataTables_1.11.2.bootstrap4.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_chart.js"></script>
+
+<script>
+
+    var ASE_ID = "";
+    var ASE_EN_Username = "";
+    var LogInErrorCnt = 0;
+
+    ASE_ID = sessionStorage.getItem('ASE_Account');
+    ASE_EN_Username = sessionStorage.getItem('ASE_EN_User');
+    console.log("ID: " + ASE_ID + "UserName: " + ASE_EN_Username);
+
+    // 檢查是否有ASE ID 若沒有重新導向登入頁面
+    if(!ASE_ID)
+    {
+        window.location.assign("https://dct_tester.kh.asegroup.com:4751/Dashboard/login");
+        //window.location.assign("http://localhost:4750/Dashboard/login");
+    }
+
+    // 顯示使用者名稱
+    $('#username').text("HI " + ASE_EN_Username); // 假設使用者資訊中的名稱欄位為 name
+
+    // 登出按鈕點擊事件
+    $('#logoutButton').click(function () {
+        // 執行登出操作，例如向後端發送登出請求或清除相關使用者資訊
+        console.log('User logged out');
+        window.location.assign("https://dct_tester.kh.asegroup.com:4751/Dashboard/login");
+        //window.location.assign("http://localhost:4750/Dashboard/login");
+    });
+
+    // 初始化資料表
+    var dataTable = $('#dataTable').DataTable();
+    // var dataTable;
+
+    // dataTable搜尋功能
+    $('#searchInput').keyup(function () {
+        dataTable.search($(this).val()).draw();
+    });
+
+    // 建立一個空的標籤和數值陣列
+    var UPH_labels = [];
+    var UPH_values = [];
+    var UPH_Column = [];
+    var _columns   = [];
+    var rowData    = [];
+
+    // 確認輸入型態是否正確,皆正確為1;則一不正確為0
+    var checkInputTypeFlag = 0;
+
+    // 確認輸入資料是否重複,重複為1;沒重複為0 --> 避免按太快Request過多
+    var checkSameValueFlag = 0;
+
+    // 判斷按鈕是否被按下 --> 預防User按太快造成API Request過多
+    var isSearchButtonClicked = false;
+
+    //
+    const ctx1 = document.getElementById('yearlyChart').getContext('2d');
+    //const ctx2 = document.getElementById('monthlyChart').getContext('2d');
+
+    //  初始化圖表
+    var myChart1 = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: UPH_labels,
+            datasets: [{
+                label: 'Abnormal UPH Qty',
+                data: UPH_values,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    /*
+        //  初始化圖表
+        var myChart2 = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+            labels: UPH_labels,
+            datasets: [{
+                label: 'Abnormal UPH Qty',
+                data: UPH_values,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }
+            }
+        });
+    */
+
+    // 按下搜尋按鈕事件
+    $('#searchButton').click(function () {
+        var startDatetime = $('#startDatetimeInput').val();
+        var endDatetime   = $('#endDatetimeInput').val();
+        var thresholdVal  = $('#ThresholdInput').val();
+        var DataSize      = 100;
+
+        // 確認輸入參數
+        console.log('Start Datetime:', startDatetime);
+        console.log('End Datetime:', endDatetime);
+        console.log('Threshold:', thresholdVal);
+
+        // 判斷輸入參數是否為空值與非數值及數值超過範圍
+        // 若都正常為1;則一異常為0
+        if (startDatetime === '' || endDatetime === '') {
+            alert("請選擇分析時間");
+            checkInputTypeFlag = 0;
+        } else if (isNotANumber(thresholdVal)) {
+            alert("請輸入正確閥值資訊 ex:50");
+            checkInputTypeFlag = 0;
+        } else if (isOverNumber(thresholdVal)) {
+            alert("輸入閥值超過上限");
+            checkInputTypeFlag = 0;
+        } else {
+            checkInputTypeFlag = 1;
+
+            // 若輸入數值皆正常,則檢查數值是否跟上一次重複
+            var checkSameData = [startDatetime, endDatetime, thresholdVal];
+            if (isSameData(checkSameData)) {
+                checkSameValueFlag = 1;
+            } else {
+                checkSameValueFlag = 0;
+            }
+        }
+
+        if (!checkSameValueFlag) {
+            if (checkInputTypeFlag === 1) {
+                // 清空陣列,不保留上一次的資料
+                UPH_labels = [];
+                UPH_values = [];
+                UPH_Column = [];
+                _columns   = [];
+                rowData    = [];
+
+                var params = {
+                    Threshold: thresholdVal,
+                    Date1: startDatetime,
+                    Date2: endDatetime,
+                    size: DataSize,
+                };
+
+                var params1 = {
+                    Threshold: thresholdVal,
+                    Date1: startDatetime,
+                    Date2: endDatetime,
+                    size: 10000,
+                };
+
+                var callUPHChartURL = "https://dct_tester.kh.asegroup.com:59102/api/uphapi3?";
+
+                // 畫圖
+                $.ajax({
+                    url: callUPHChartURL + $.param(params), // 要請求的 API 網址
+                    type: "GET", // 使用 GET 方法
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (response) {
+
+                        // 當請求成功時，將回傳的資料顯示在 result 元素中
+                        console.log(response);
+
+                        $.each(response.data, function (index, data) {
+                            // 資料塞入陣列
+                            UPH_labels.push(data.lowMachine);
+                            UPH_values.push(data.Abnormal_TP_Qty);
+                        });
+
+                        // 銷毀已經創建的圖表
+                        myChart1.destroy();
+                        //myChart2.destroy();
+
+                        // 繪製圖表1
+                        myChart1 = new Chart(ctx1, {
+                            type: 'bar',
+                            data: {
+                                labels: UPH_labels,
+                                datasets: [{
+                                    label: 'Abnormal UPH Qty',
+                                    data: UPH_values,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'AbnormalUPH_Qty'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Machine'
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
+
+                        /*
+                        // 繪製圖表2
+                        myChart2 = new Chart(ctx2, {
+                            type: 'bar',
+                            data: {
+                            labels: UPH_labels,
+                            datasets: [{
+                                label: 'Abnormal UPH Qty',
+                                data: UPH_values,
+                                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                            }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                beginAtZero: true
+                                }
+                            }
+                            }
+                        });
+                        */
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        alert("請求失敗：" + status + "," + error + "," + URL);
+                    }
+                });
+
+                var callallUPHDataURL = "https://dct_tester.kh.asegroup.com:59102/api/alluphapi?";
+                //var callallUPHDataURL = "http://localhost:59101/api/alluphapi?";
+
+                // 表格
+                $.ajax({
+                    url: callallUPHDataURL + $.param(params1), // 要請求的 API 網址
+                    type: "GET", // 使用 GET 方法
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (response) {
+
+                        // 當請求成功時，將回傳的資料顯示在 result 元素中
+                        console.log(response);
+
+                        if (dataTable) {
+                            dataTable.destroy(); // 銷毀 DataTables 表格
+                            $('#dataTable').empty(); // 清空表格內容的 HTML
+                            dataTable = null; // 將 table 變數設為 null，表示表格已被銷毀
+                        }
+
+                        // 取得Json的Key Value --> Set DataTable Columns Name
+                        // 判斷回傳有沒有值
+                        if (response.data[0] != null) {
+                            var columns = getJSONKeys(response.data[0], UPH_Column);
+
+                            if (columns.length > 0) {
+                                for (var i = 0; i < columns.length; i++) {
+                                    _columns.push({ title: columns[i] });
+                                }
+                            }
+                            // 更新dataTable
+                            dataTable = $('#dataTable').DataTable({
+                                columns: _columns,
+                            });
+                        }
+
+                        $.each(response.data, function (index, data) {
+                            rowData = [
+                                data.BestMachine,
+                                data.machine,
+                                data.TP,
+                                data.BestUPH,
+                                data.BestSiteQty,
+                                data.PerSiteUPH,
+                                data.UPH,
+                                data.SiteQty,
+                                data.BestLotID,
+                                data.LotID,
+                                data.DUTs,
+                                data.Program_path,
+                                data.BestPath
+                            ];
+
+                            // 將資料插入 DataTable
+                            dataTable.row.add(rowData);
+                        });
+
+                        // 重新繪製 DataTable
+                        dataTable.draw();
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        alert("請求失敗：" + status + "," + error + "," + URL);
+                    }
+                });
+            }
+        }
+    });
+
+    // 判斷輸入數值是否超過範圍
+    function isOverNumber(value) {
+        return value > 100;
+    }
+
+    // 判斷是否為空值或非數字
+    function isNotANumber(value) {
+        return value === '' || isNaN(value);
+    }
+
+    // 延遲指定時間
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
+    // 迴圈掃描 Json Key Value
+    // return: array
+    function getJSONKeys(json, keys) {
+        if (typeof json === 'object') {
+            for (var k in json) {
+                keys.push(k);
+                getJSONKeys(json[k], keys);
+            }
+        }
+        return keys;
+    }
+
+    var lastData = null; // 記錄上一次的值
+    function isSameData(data) {
+        if (lastData !== null && data.length === lastData.length) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i] !== lastData[i]) {
+                    lastData = data; // 更新上一次的資料
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            lastData = data; // 更新上一次的資料
+            return false;
+        }
+    }
+
+</script>
+</html>

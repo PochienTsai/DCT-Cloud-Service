@@ -1,0 +1,292 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>DCT Dashboard Service LogIn</title>
+
+    <link rel="icon" href="~/Resource/Dashboard/DCT Dashboard.ico" type="image/x-icon">
+
+    <style>
+        .container {
+            padding-top: 90px;
+            font-family: "Arial", sans-serif;
+        }
+
+        .background-image {
+            background-image: url('../../Resource/Dashboard/DashboardLoginBackground.png');
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            filter: blur(5px);
+        }
+
+        .panel-title {
+            font-size: 33px;
+            color: #888888;
+
+            @* font-family: 'Helvetica, Arial, sans-serif';
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+            /* 標題顏色，可自行調整 */ *@
+
+        }
+
+        .panel-login {
+            padding-bottom: 1em;
+            background-color: #fafafa;
+            -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+            box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+
+            .panel-login > .panel-heading hr {
+                margin-top: 10px;
+                margin-bottom: 0px;
+                clear: both;
+                border: 0;
+                height: 1px;
+                background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+                background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+                background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+                background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+            }
+
+            .panel-login input[type="text"],
+            .panel-login input[type="email"],
+            .panel-login input[type="password"] {
+                height: 45px;
+                border: 1px solid #ddd;
+                font-size: 19px;
+                -webkit-transition: all 0.1s ease;
+                -moz-transition: all 0.1s ease;
+                transition: all 0.1s ease;
+            }
+
+            .panel-login input:hover,
+            .panel-login input:focus {
+                outline: none;
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+                border-color: #ccc;
+            }
+
+        .btn-login {
+            background-color: #59b2e0;
+            outline: none;
+            font-size: 18px;
+            height: auto;
+            font-weight: normal;
+            border-color: #ccc;
+        }
+
+        .input-group {
+            margin-top: 35px;
+        }
+
+        #username:focus,
+        #password:focus {
+            border-bottom: 2px solid #b1b1b1;
+            padding-bottom: 3.5px;
+        }
+
+        #username,
+        #password {
+            border-radius: .25rem;
+            display: block;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        #login-submit {
+            @* color: #008080;
+            background-color: #fff;
+            margin-top: 25px;
+            transition: all 0.1s ease; *@
+
+            width: 100%;
+            padding: 8px 0;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;            
+        }
+
+            #login-submit:hover {
+                border-color: #66afe9;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+            }
+
+        .form-control-placeholder {
+            pointer-events: none;
+            cursor: text;
+            position: absolute;
+            top: 0;
+            padding: 12px 0 0 13px;
+            transition: all 200ms;
+            opacity: 0.5;
+            font-size: 16px
+        }
+
+        .form-control-focused {
+            font-size: 95%;
+            transform: translate3d(0, -100%, 0);
+            opacity: 1;
+        }
+
+        .panel-login input:focus ~ label,
+        .panel-login input:not(:placeholder-shown) ~ label,
+        .panel-login input:valid ~ label,
+        .panel-login input:-webkit-autofill:focus ~ label {
+            font-size: 95%;
+            transform: translate3d(0, -100%, 0);
+            opacity: 1;
+        }
+    </style>
+
+    <!-- boostrap-->
+    <link rel="stylesheet" href="~/Content/bootstrap-3.3.7.min.css">
+    <script src="~/Scripts/bootstrap-3.3.7.min.js"></script>
+    <!-- $Ajax $用法-->
+    <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="background-image"></div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-login">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">DCT Dashboard Service Login</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i>AD帳號</span>
+                                    <input type="text" name="txtName" id="txtName" tabindex="1" value=""
+                                           class="form-control" required placeholder="Username">
+                                </div>
+
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><i class="fa fa-lock"></i>密碼</span>
+                                    <input type="password" name="txtPwd" id="txtPwd" tabindex="2" value=""
+                                           class="form-control" required placeholder="Password">
+                                </div>
+
+                                <div class="col-sm-6 col-sm-offset-3" id="msger-inputarea">
+                                    <button type="submit" name="login-submit" id="login-submit" tabindex="3"
+                                            class="form-control btn btn-login" value="LOGIN">
+                                        <i class="fas fa-sign-in-alt"></i> Login
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            /// 偵測帳號物件是否按下Enter事件
+            $("#txtName").keyup(function(event){
+                if(event.which === 13){
+                    $("#login-submit").click();
+                }
+            });
+
+            /// 偵測密碼物件是否按下Enter事件
+            $("#txtPwd").keyup(function(event){
+                if(event.which === 13){
+                    $("#login-submit").click();
+                }
+            });
+
+            /// 按下Login按鈕事件
+            $("#login-submit").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/CustomerService/LDAP",
+                    data: '{userName: "' + $("#txtName").val() + '" , password: "' + $("#txtPwd").val() + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.status === "fail") {
+                            alert("LogIn Status : " + response.status);
+                        }
+                        else {
+                            @* alert("Hello: " + response.ASEUsername +
+                                "\nMail: " + response.ASEMail +
+                                "\nCurrent Date and Time: " + response.timestamp +
+                                "\ndepartment: " + response.ASEdepartment +
+                                "\nLogIn Status : " + response.status); *@
+
+                            //cp_add_cookie($("#txtName").val());
+
+                            ///透過sessionStorage儲存
+                            ID_Str = $("#txtName").val();
+                            ID_Str = ID_Str.toUpperCase();
+                            sessionStorage.setItem('ASE_Account',ID_Str);
+                            sessionStorage.setItem('ASE_EN_User',response.ASE_EN_Username);
+
+                            //window.location.assign("http://localhost:4750/Dashboard/Home")
+                            window.location.assign("https://dct_tester.kh.asegroup.com:4751/Dashboard/Home")
+
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        // Reference : https://juejin.cn/post/6956215013858082852
+        //设置 cookie 值的函数,创建一个函数用于存储访问者的名字
+        //cname:名称，必须字母
+        //cvalue：值
+        //exdays：过期时间（天）
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+
+        //添加 cookie
+        function cp_add_cookie(num) {
+            setCookie("cp_keynum", num, 2);
+        }
+
+    </script>
+</body>
+
+</html>

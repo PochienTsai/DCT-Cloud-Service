@@ -1,0 +1,147 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>DCT Customer Service</title>
+    <!-- 智能客服UI CSS-->
+    <link rel="stylesheet" href="~/Content/CustomerService.css">
+    <!-- $Ajax $用法-->
+    <script src="~/Scripts/jquery-2.1.1.min.js"></script>
+    <!-- boostrap modal (我要提問視窗)-->
+    <link rel="stylesheet" href="~/Content/bootstrap-3.3.7.min.css">
+    <script src="~/Scripts/bootstrap-3.3.7.min.js"></script>
+    @* <link rel="stylesheet" href="~/Content/font-awesome.min.css"> *@
+
+    <link rel = "icon" href="../../Resource/CustomerService/DCT_Robot.ico" type="image/x-icon">
+
+</head>
+
+<body>
+    <section class="msger">
+        <header class="msger-header">
+            <div class="msger-header-title">
+                <i class="fas fa-comment-alt"></i> DCT - Customer Service
+            </div>
+            <div class="msger-header-options">
+                <span><i class="fas fa-cog"></i></span>
+            </div>
+        </header>
+
+        @*<div id="typing_gif" class="typing_gif">
+            <img src="https://raw.githubusercontent.com/reachtokish/typing-animation/master/giphy.gif" alt="typing" />
+            </div>*@
+
+        <main class="msger-chat" id="chat-room1">
+            <div class="msg left-msg">
+                <div class="msg-img" style="background-image: url('../../Resource/CustomerService/DCT_Robot.ico')">
+                </div>
+
+                <div class="msg-bubble">
+                    <div class="msg-info">
+                        <div class="msg-info-name">DCT-BOT</div>
+                        @*<div class="msg-info-time">12:45</div>*@
+                    </div>
+
+                    <div class="msg-text">
+                        您好，我是DCT 智能客服，請直接發問，讓我來為您解答。<br>請您明確提出問題,如:機台,軟體問題,DCT操作,DCT數值,軟體更新,軟體教學… 😄
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <form class="msger-inputarea"  id="msger-inputarea">
+            <input type="text" class="msger-input" id="msger-input" placeholder="請輸入你的問題,如機台、軟體問題、DCT操作、DCT數值、軟體更新、軟體教學...">
+            <button type="submit" class="msger-send-btn" id="msger-send-btn">Send</button>
+        </form>
+
+
+        @* 新增問題 *@
+        @* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">新增問題</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label message-text-class">Message:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <section class="button-box">
+                                    <input id="upload_any_file" class="msger-upload" type="file"
+                                        accept="image/*,.txt,.csv,.pdf,.xlsx">
+                                    <label for="upload_any_file" class="button-primary">
+                                        <img class="icon" src="~/Resource/CustomerService/Upload.png" alt="上傳檔案">
+                                        <span>客製選擇檔案按鈕</span>
+                                    </label>
+                                </section>
+
+                                <button id="btnAddNewQuestion" type="submit"
+                                    class="btn btn-primary AddNewQuestionbtn">Send</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+
+        @* // [沒成功] 回饋
+            <div class="modal fade" id="feedback-modal" tabindex="-1" role="dialog" aria-labelledby="feedbackTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="feedbackTitle">回饋與建議</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <!-- Medium input -->
+            <div class="md-form">
+            <input type="text" id="feedback_message" class="form-control">
+            <label for="feedback_message">請填寫您寶貴的回饋與建議</label>
+            <input type="hidden" id="feedback_keyword">
+            <input type="hidden" id="feedback_type">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary feedback-dismiss1" id="feedback-dismiss"
+            data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary feedback-modal-submit1" id="feedback-modal-submit">送出</button>
+            </div>
+            </div>
+            </div>
+            </div> *@
+
+
+        <!-- Footer -->
+        <footer class="bg-dark">
+            <p class="m-0 text-center text-white">Copyright &copy; 2023 ASEGroup-CTRD 5910 All Rights Reserved.</p>
+        </footer>
+    </section>
+    <script src="~/Scripts/Customer Service.js"></script>
+</body>
+
+</html>

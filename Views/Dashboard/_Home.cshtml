@@ -1,0 +1,313 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_DashboardMenu.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    @*<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.2/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">*@
+
+    <link href="~/Content/Dashboard_UPH_bootstrap_4.3.1.min.css" rel="stylesheet">
+    <link href="~/Content/Dashboard_UPH_dataTables1.11.2.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/Resource/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet">
+
+    <title>DCT Dashboard</title>
+
+    <link rel="icon" href="~/Resource/Dashboard/DCT Dashboard.ico" type="image/x-icon">
+
+    <style>
+        .sidebar {
+            background-color: #e6e6ff;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .sidebar .accordion .card {
+            background-color: #f2f2ff;
+            border: none;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .accordion .card .card-header {
+            background-color: #d9d9ff;
+        }
+
+        .sidebar .accordion .card .card-header button {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .sidebar .accordion .card .card-body ul {
+            margin-bottom: 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .chart-container {
+            margin-bottom: 40px;
+            /* position: relative;
+			width: 400px;
+			height: 300px;        */
+        }
+
+        .chart {
+            min-height: 200px;
+        }
+
+        .date-range-container {
+            margin-bottom: 20px;
+        }
+
+        .date-range-container .form-control {
+            width: 200px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .date-range-container .btn-sm {
+            width: 100px;
+            height: 38px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .loader {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            animation: spin 2s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 菜單資訊 -->
+            <div class="col-md-2 sidebar">
+                <div class="accordion" id="menuAccordion">
+                    <!-- 登入資訊 -->
+                    <div class="navbar">
+                        <span class="navbar-text" id="username"></span> <button class="btn btn-link nav-link"
+                                                                                id="logoutButton">
+                            <i class="fas fa-sign-out-alt"></i> 登出
+                        </button>
+                    </div>
+                    <!-- 展開-Home -->
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseOne" aria-expanded="true"
+                                        class="btn btn-link" data-target="#collapseOne" data-toggle="collapse"
+                                        type="button">
+                                    <i class="fas fa-home"></i> Home
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingOne" class="collapse show" data-parent="#menuAccordion"
+                             id="collapseOne">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        @*<a href="http://localhost:4750/Dashboard/Home"><i class="fas fa-info-circle"></i> DashBoard-Home</a>*@
+                                        <a href="https://dct_tester.kh.asegroup.com:4751/Dashboard/Home"><i class="fas fa-info-circle"></i> DashBoard-Home</a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="#"><i class="fas fa-star"></i> Features</a>
+                                    </li> -->
+                                    <!-- <li>
+                                        <a href="#"><i class="fas fa-play-circle"></i> Demo</a>
+                                    </li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Tester Status -->
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseTwo" aria-expanded="false"
+                                        class="btn btn-link collapsed" data-target="#collapseTwo" data-toggle="collapse"
+                                        type="button">
+                                    <i class="fas fa-users"></i> Tester Status
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingTwo" class="collapse" data-parent="#menuAccordion"
+                             id="collapseTwo">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-building"></i> Tester Healthy Monitor</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-users"></i> UI Healthy Monitor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Production Efficiency -->
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseThree" aria-expanded="false"
+                                        class="btn btn-link collapsed" data-target="#collapseThree" data-toggle="collapse"
+                                        type="button">
+                                    <i class="fas fa-cogs"></i> Production Efficiency
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingThree" class="collapse" data-parent="#menuAccordion"
+                             id="collapseThree">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-laptop"></i> Tester Efficiency Monitor</a>
+                                    </li>
+                                    <li>
+                                        @*<a href="http://localhost:4750/Dashboard/UPH"><i class="fas fa-paint-brush"></i> UPH Diff</a>*@
+                                        <a href="https://dct_tester.kh.asegroup.com:4751/Dashboard/UPH"><i class="fas fa-info-circle"></i> UPH Diff</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-bullhorn"></i> Recovery Rate trend(重測過高)</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-FA Info -->
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseFour" aria-expanded="false"
+                                        class="btn btn-link collapsed" data-target="#collapseFour" data-toggle="collapse"
+                                        type="button">
+                                    <i class="fas fa-envelope"></i> FA Info
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingFour" class="collapse" data-parent="#menuAccordion"
+                             id="collapseFour">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-envelope"></i> Fail Pin Rate</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-phone"></i> Yield Diff(不同機台)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Yield Diff(不同Site)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Bin Diff(不同Site)</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 展開-Process Stability -->
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h2 class="mb-0">
+                                <button aria-controls="collapseFive" aria-expanded="false"
+                                        class="btn btn-link collapsed" data-target="#collapseFive" data-toggle="collapse"
+                                        type="button">
+                                    <i class="fas fa-envelope"></i> Process Stability
+                                </button>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="headingFive" class="collapse" data-parent="#menuAccordion"
+                             id="collapseFive">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#"><i class="fas fa-envelope"></i> Low Yield</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-phone"></i> Low CP/CPK(lot)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Marginal P/F trend</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i> Low PPK(lot)(製成穩定度)</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fas fa-map-marker-alt"></i> Test Value diff(lot)
+                                            (製成穩定度)
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 主內容 -->
+            <div>
+                <h1>
+                    Hello Im Main Page
+                </h1>
+            </div>
+        </div>
+    </div>
+</body>
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>*@
+
+<script src="~/Scripts/jquery-2.1.1.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_bootstrap4.3.1.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_jquery_1.11.2.dataTables.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_dataTables_1.11.2.bootstrap4.min.js"></script>
+<script src="~/Scripts/Dashboard_UPH_chart.js"></script>
+
+<script>
+    var ASE_ID = "";
+    var ASE_EN_Username = "";
+    var LogInErrorCnt = 0;
+
+    ASE_ID = sessionStorage.getItem('ASE_Account');
+    ASE_EN_Username = sessionStorage.getItem('ASE_EN_User');
+    console.log("ID: " + ASE_ID + "UserName: " + ASE_EN_Username);
+
+    // 檢查是否有ASE ID 若沒有重新導向登入頁面
+    if(!ASE_ID)
+    {
+        window.location.assign("https://dct_tester.kh.asegroup.com:4751/Dashboard/login");
+        //window.location.assign("http://localhost:4750/Dashboard/login");
+    }
+
+    // 顯示使用者名稱
+    $('#username').text("HI " + ASE_EN_Username); // 假設使用者資訊中的名稱欄位為 name
+
+    // 登出按鈕點擊事件
+    $('#logoutButton').click(function () {
+        // 執行登出操作，例如向後端發送登出請求或清除相關使用者資訊
+        console.log('User logged out');
+        window.location.assign("https://dct_tester.kh.asegroup.com:4751/Dashboard/login");
+        //window.location.assign("http://localhost:4750/Dashboard/login");
+    });
+
+</script>
+</html>

@@ -1,0 +1,901 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width" />
+
+    <title>DCT Universal Search Engine</title>
+
+    <!-- 網頁icon -->
+    <link rel="icon" type="image/png" href="~/Resource/CustomerService/Search_Engine_ICON.png">
+
+    <!-- JQuery Multi Select 多選下拉式選單 -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.bundle.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.dataTables.min.css">
+    <!-- Buttons CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+
+    <!-- DataTables JavaScript -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Buttons JavaScript -->
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+
+    @* Column Filter *@
+    <script src="https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+    @* Export to Excel *@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>*@
+
+    <!-- 下拉式選單優化 -->
+    <link rel="stylesheet" type="text/css" href="~/Content/StyleSheet1.css" charset="UTF-8">
+
+    <!-- 引入 Bootstrap 5 CSS -->
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">*@
+
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .search-button {
+            background-color: #00CED1;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /*.item {
+            margin: 20px;
+        }*/
+
+        body {
+            position: relative; /* 設定 body 為相對定位 */
+            background-repeat: no-repeat; /* 設定圖片重複 */
+            background-attachment: fixed; /* 設定圖片固定 */
+            background-position-x: calc(50% + 100px);
+            background-position-y: center;
+        }
+
+            body::before {
+                content: ""; /* 設定擴充元素的內容為空 */
+                position: absolute; /* 設定擴充元素為絕對定位 */
+                top: 0; /* 設定擴充元素的位置 */
+                left: 0; /* 設定擴充元素的位置 */
+                width: 100%; /* 設定擴充元素的寬度和高度 */
+                height: 100%;
+                background-image: url("/Resource/CustomerService/Search_Engine_ICON.png"); /* 設定浮水印圖片 */
+                opacity: 0.1; /* 設定圖片透明度 */
+                z-index: -1; /* 設定擴充元素的 z-index 低於 body，避免遮蓋內容 */
+                background-repeat: no-repeat; /* 設定圖片重複 */
+                background-attachment: fixed; /* 設定圖片固定 */
+                background-position-x: calc(50% + 100px);
+                background-position-y: center;
+            }
+    </style>
+</head>
+<body>
+
+
+    <img src="~/Resource/CustomerService/Search_Engine_ICON.png" alt="我的圖片" width="50" height="50" style="display: flex; float: left; margin-left: 10px; margin-right: 5px; margin-top: 5px;">
+    <h1>Universal Search Engine</h1>
+    <!-- 分隔線 -->
+    <hr>
+
+    <div class="container-fluid">
+        <div class="row justify-content-start">
+            <!-- 左邊勾選欄(膚色) -->
+            <div class="col-2" style="background-color: #F5DEB3;">
+
+                <div style="margin-top: 20px;"></div>
+                <h5 style="color: blue;"> 搜尋最大上限10000筆資料 </h5>
+
+                <label for="date-input">開始時間: </label>
+                <input type="date" id="date-input" name="date"><br>
+                <label for="date-output">結束時間: </label>
+                <input type="date" id="date-output" name="date"><br>
+
+                <!-- 下拉式選單 -->
+                <hr>
+                <p style="color: blue;">下拉式選單</p>
+                <label>
+                    @*<input type="checkbox" name="dctcheckboxlist_multiselect" value="factory" id="CheckBoxFactory" onclick="DropdownGeneral('CheckBoxFactory', 'Factory', 'factory-old-options', 'Class_Factory', 'factory')"> Factory<br>*@
+                    @*<input type="checkbox" name="dctcheckboxlist_multiselect" value="factory" id="CheckBoxFactory" onclick="DropdownFactory()"> Factory<br>*@
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="factory" id="CheckBoxFactory" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxFactory', 'Factory', 'factory-options', 'Class_Factory_JQuery_MultiSelect', 'factory')"> Factory<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="machine_id" id="CheckBoxMachineID" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxMachineID', 'Machine ID', 'machine_id-options', 'Class_MachineID_JQuery_MultiSelect', 'machine_id')"> Machine ID<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="customer" id="CheckBoxCustomer" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxCustomer', 'Customer', 'customer-options', 'Class_Customer_JQuery_MultiSelect', 'customer')"> Customer<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="site_qty" id="CheckBoxSiteQty" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxSiteQty', 'Site Qty', 'site_qty-options', 'Class_SiteQty_JQuery_MultiSelect', 'site_qty')"> Site Qty<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="test_program" id="CheckBoxTestProgram" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxTestProgram', 'Test Program', 'test_program-options', 'Class_TestProgram_JQuery_MultiSelect', 'test_program')"> Test Program<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="efficiency_check" id="CheckBoxTestStatus" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxTestStatus', 'Test Status', 'efficiency_check-options', 'Class_TestStatus_JQuery_MultiSelect', 'efficiency_check')"> Test Status<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="pui_version" id="CheckBoxPUI_ver" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxPUI_ver', 'PUI Ver', 'pui_version-options', 'Class_PUI_ver_JQuery_MultiSelect', 'pui_version')"> PUI Ver<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="library_version" id="CheckBoxLib_ver" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxLib_ver', 'Lib Ver', 'library_version-options', 'Class_Lib_ver_JQuery_MultiSelect', 'library_version')"> Lib Ver<br>
+                    <input type="checkbox" name="dctcheckboxlist_multiselect" value="virtual_instrument_version" id="CheckBoxUI_ver" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxUI_ver', 'Virtual Instrument Ver', 'virtual_instrument_version-options', 'Class_UI_ver_JQuery_MultiSelect', 'virtual_instrument_version')"> Virtual Instrument Ver<br>
+                    @*<input type="checkbox" name="dctcheckboxlist_multiselect" value="program_path" id="CheckBoxProgramPath" onclick="JQuery_MultiSelect_DropdownGeneral('CheckBoxProgramPath', 'Program Path', 'program_path-options', 'Class_ProgramPath_JQuery_MultiSelect', 'program_path')"> Program Path<br>*@
+                </label>
+
+                <!-- 條件式選單(介於) -->
+                <hr>
+                <p style="color: blue;"> 條件式選單 </p>
+                <label>
+                    <input type="checkbox" name="dctcheckboxlist_textbox" value="yield" id="CheckBoxYield" onclick="Condition_Filter_General('CheckBoxYield', 'Yield', 'Class_Yield_Textbox_Num', 'yield')"> Yield<br>
+                    <input type="checkbox" name="dctcheckboxlist_textbox" value="uph" id="CheckBoxUPH" onclick="Condition_Filter_General('CheckBoxUPH', 'UPH', 'Class_UPH_Textbox_Num', 'uph')"> UPH<br>
+                    <input type="checkbox" name="dctcheckboxlist_textbox" value="lead_count" id="CheckBoxLeadCount" onclick="Condition_Filter_General('CheckBoxLeadCount', 'Lead Count', 'Class_LeadCount_Textbox_Num', 'lead_count')"> Lead Count<br>
+                </label>
+
+                <!-- 搜尋 -->
+                <hr>
+                <div class="d-flex justify-content-center">
+                    <button class="search-button" button id="btnDataTable">
+                        搜尋
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右邊下拉式選單、條件式選單、JQuery DataTable... -->
+            <div class="col-10">
+                <div class="row">
+                    <!-- 上半部分 (下拉式選單) -->
+                    <div class="col-12" style="display: flex; flex-wrap: wrap; margin: 20px;">
+                        <div class="Class_Factory_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_MachineID_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_Customer_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_SiteQty_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_TestProgram_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_TestStatus_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_PUI_ver_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_Lib_ver_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        <div class="Class_UI_ver_JQuery_MultiSelect" style="margin-right: 20px;"></div>
+                        @*<div class="Class_ProgramPath_JQuery_MultiSelect" style="margin-right: 20px;"></div>*@
+                    </div>
+                    <!-- 上半部分 (條件式選單) -->
+                    <div class="col-12" style="display: flex; flex-wrap: wrap; margin: 20px;">
+                        <div class="Class_Yield_Textbox_Num" style="margin-right: 20px;"></div>
+                        <div class="Class_UPH_Textbox_Num" style="margin-right: 20px;"></div>
+                        <div class="Class_LeadCount_Textbox_Num" style="margin-right: 20px;"></div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 100px;"></div>
+                <div class="row">
+                    <!-- 下半部分 (JQuery DataTable) -->
+                    <div class="col-12">
+                        <table id="table-container" class="display" style="width: 100%;"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // 下拉式選單事件
+        function createMultiSelect() {
+            var _multiSelect = $('.multiSelect');
+            _multiSelect.each(function () {
+                let _this = $(this);
+                let _selectBtn = _this.find('.selectBtn');
+                let _optionGroup = _this.find('.optionGroup');
+                const speed = 250;
+
+                // 定位模擬的 select 下拉選單
+                _optionGroup.css({
+                    'left': _selectBtn.position().left,
+                    'top': _this.outerHeight()
+                })
+
+                // 模擬 placeholder 文字
+                var placeholder = '<span class="placeholder">' + _selectBtn.attr('data-title') + '</span>';
+                if (_selectBtn.text() === "") {
+                    _selectBtn.prepend(placeholder);
+                }
+
+                // 下拉選單顯示／隱藏
+                _selectBtn.click(function () {
+                    if (_optionGroup.is(':visible')) {
+                        _optionGroup.slideUp(speed);
+                    } else {
+                        _optionGroup.slideDown(speed);
+                        // $(this).parent().siblings().find('.optionGroup').slideUp(speed);
+                    }
+                })
+                //_optionGroup.mouseleave(function () {
+                //    $(this).slideUp(speed);
+                //})
+
+                // 把選到的項目放到 _selectBtn 中
+                _selectBtn.each(function () {
+                    let _checkOption = $(this).next('.optionGroup').find('input[type="checkbox"]');
+                    let selected = [];
+
+                    _checkOption.click(function () {
+                        let _optionItem = $(this);
+                        if (_optionItem.parent().hasClass('checked')) {
+                            _optionItem.parent().removeClass('checked');
+                            let index = selected.indexOf(_optionItem.parent().text());
+                            selected.splice(index, 1);
+                            _selectBtn.text(selected.toString());
+                            if (selected.toString() === "") {
+                                _selectBtn.prepend(placeholder);
+                            }
+                        } else {
+                            _optionItem.parent().addClass('checked');
+                            selected.push(_optionItem.parent().text());
+                            _selectBtn.text(selected.toString());
+                        }
+                    })
+                })
+
+                // 防止下拉選單自動隱藏
+                //_optionGroup.click(function (event) {
+                //    event.stopPropagation();
+                //})
+            })
+        }
+
+        // Factory
+        function DropdownFactory() {
+
+            var dateInput = document.getElementById("date-input").value;
+            console.log(dateInput);
+            var dateOutput = document.getElementById("date-output").value;
+            console.log(dateOutput);
+
+            // 取得checkbox元素
+            var checkboxfactory = document.getElementById("CheckBoxFactory");
+
+            // 如果checkbox被勾選，建立下拉式選單
+            if (checkboxfactory.checked) {
+
+                var newClass = $('<div class="multiSelect"><h3>Factory</h3 ><div class="selectBtn" data-title="多選選單，請選擇"></div><div class="optionGroup" id ="factory-options"></div></div>');
+                $('.Class_Factory').append(newClass);
+
+
+                // 取得下拉式選單容器元素
+                var dropdownContainer = document.getElementById("factory-options");
+
+                // 清空checkboxlist裡面的選項
+                dropdownContainer.innerHTML = "";
+
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/getFactory"
+                var dataToSend = { Date1: dateInput, Date2: dateOutput, size: "10" }; // 要傳送的資料，這裡使用一個 JSON 物件
+
+                $.ajax({
+                    url: URL, // 要請求的 API 網址
+                    type: "GET", // 使用 POST 方法
+                    data: dataToSend, // 傳送的資料
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (data) {
+                        // 當請求成功時，將回傳的資料顯示在 result 元素中
+                        //$("#result4").text("成功傳送資料，伺服器回應：" + JSON.stringify(data));
+
+                        $.each(data.data, function (index, element) {
+                            var label = document.createElement('label');
+                            var input = document.createElement('input');
+                            input.type = 'checkbox';
+                            label.appendChild(input);
+                            label.appendChild(document.createTextNode(element.factory));
+                            dropdownContainer.appendChild(label);
+                            console.log(label);
+                        });
+
+                        // 下拉式選單事件
+                        createMultiSelect();
+
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        //$("#table-container").text("請求失敗：" + error);
+                        dropdownContainer.innerHTML = "";
+                    }
+                });
+
+            } else {
+                // 如果checkbox沒有被勾選，移除下拉式選單元素
+                //dropdownContainer.innerHTML = "";
+                $('.Class_Factory').empty();
+            }
+        }
+
+        // General Drop Down API
+        // EX: CheckBoxFactory, Factory, factory-options, '.Class_Factory', "factory"
+        function DropdownGeneral(CheckBoxID, Title, DropdownID, ClassID, element_parameter) {
+
+            var dateInput = document.getElementById("date-input").value;
+            console.log(dateInput);
+            var dateOutput = document.getElementById("date-output").value;
+            console.log(dateOutput);
+            // 將 日期 轉換成物件
+            var dateObj = { Date1: dateInput, Date2: dateOutput, size: "10" }; // 要傳送的資料，這裡使用一個 JSON 物件
+
+            // 取得回拋參數名稱
+            var DropdowncheckedObj = {};
+            DropdowncheckedObj[element_parameter] = "123";
+
+            // 合併 checkedObj 與 dataToSend
+            var dataToSend = Object.assign({}, dateObj, DropdowncheckedObj);
+            // 最終的資料
+            console.log(dataToSend);
+
+            // 取得checkbox元素
+            var checkboxfactory = document.getElementById(CheckBoxID);
+
+            // 如果checkbox被勾選，建立下拉式選單
+            if (checkboxfactory.checked) {
+
+                // 創建下拉式選單於Class
+                var newClass = $('<div class="multiSelect"><h3>' + Title + '</h3 ><div class="selectBtn" data-title="多選選單，請選擇"></div><div class="optionGroup" id =' + DropdownID + '></div></div>');
+                $('.' + ClassID).append(newClass);
+
+                // 取得下拉式選單容器元素
+                var dropdownContainer = document.getElementById(DropdownID);
+
+                // 清空checkboxlist裡面的選項
+                dropdownContainer.innerHTML = "";
+
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/USE_Test1"
+
+                $.ajax({
+                    url: URL, // 要請求的 API 網址
+                    type: "POST", // 使用 POST 方法
+                    data: dataToSend, // 傳送的資料
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (data) {
+                        // 當請求成功時，將回傳的資料顯示在 result 元素中
+                        //$("#result4").text("成功傳送資料，伺服器回應：" + JSON.stringify(data));
+
+                        $.each(data.data, function (index, element) {
+                            var label = document.createElement('label');
+                            var input = document.createElement('input');
+                            input.type = 'checkbox';
+                            label.appendChild(input);
+                            label.appendChild(document.createTextNode(element[element_parameter]));
+                            dropdownContainer.appendChild(label);
+                            console.log(label);
+                        });
+
+                        // 下拉式選單事件
+                        createMultiSelect();
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        //$("#table-container").text("請求失敗：" + error);
+                        dropdownContainer.innerHTML = "";
+                    }
+                });
+
+            } else {
+                // 如果checkbox沒有被勾選，移除下拉式選單元素
+                //dropdownContainer.innerHTML = "";
+                $('.' + ClassID).empty();
+            }
+        }
+
+        // General Drop Down API
+        // EX:'CheckBoxFactory', 'Factory', 'factory-options', 'Class_Factory_JQuery_MultiSelect', 'factory'
+        function JQuery_MultiSelect_DropdownGeneral(CheckBoxID, Title, DropdownID, ClassID, element_parameter) {
+
+            var dateInput = document.getElementById("date-input").value;
+            console.log(dateInput);
+            var dateOutput = document.getElementById("date-output").value;
+            console.log(dateOutput);
+            // 將 日期 轉換成物件
+            var dateObj = { Date1: dateInput, Date2: dateOutput, size: "10000" }; // 要傳送的資料，這裡使用一個 JSON 物件
+
+            // 取得回拋參數名稱
+            var DropdowncheckedObj = {};
+            DropdowncheckedObj[element_parameter] = "123";
+
+            // 合併 checkedObj 與 dataToSend
+            var dataToSend = Object.assign({}, dateObj, DropdowncheckedObj);
+            // 最終的資料
+            console.log(dataToSend);
+
+            // 取得checkbox元素
+            var checkboxfactory = document.getElementById(CheckBoxID);
+
+            // 如果checkbox被勾選，建立下拉式選單
+            if (checkboxfactory.checked) {
+
+                // 創建下拉式選單於Class
+                //var newClass = $('<div class="multiSelect"><h3>' + Title + '</h3 ><div class="selectBtn" data-title="多選選單，請選擇"></div><div class="optionGroup" id =' + DropdownID + '></div></div>');
+                //$('.' + ClassID).append(newClass);
+
+                var newClass = $('<h3>' + Title + '</h3><select id=' + DropdownID + ' multiple="multiple"></select>');
+                $('.' + ClassID).append(newClass);
+
+                // 取得下拉式選單容器元素
+                var dropdownContainer = document.getElementById(DropdownID);
+
+                // 清空checkboxlist裡面的選項
+                dropdownContainer.innerHTML = "";
+
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/USE_fulldata"
+
+                $.ajax({
+                    url: URL, // 要請求的 API 網址
+                    type: "POST", // 使用 POST 方法
+                    data: dataToSend, // 傳送的資料
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (data) {
+
+                        // 開始計時
+                        console.time();
+                        var elementSet = {}; // 建立一個空物件，用於記錄已經出現過的元素
+                        $.each(data.data, function (index, element) {
+                            var value = element[element_parameter];
+                            if (!elementSet[value]) { // 如果該元素還沒有被記錄過
+                                elementSet[value] = true; // 將該元素標記為已經出現過
+                                var option = document.createElement('option');
+                                option.value = value;
+                                option.text = value;
+                                dropdownContainer.appendChild(option);
+                                //console.log(option);
+                            }
+                        });
+                        // 結束計時
+                        console.timeEnd();
+
+                        // 開始計時
+                        console.time();
+                        // JQuery Multi Select
+                        $('#' + DropdownID).multiselect({
+                            // Bootstrap 5 compatibility -> Solve Bootstrap 5 multi select problem
+                            templates: {
+                                button: '<button type="button" class="multiselect dropdown-toggle btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+                            },
+                            enableFiltering: true, // 啟用搜尋功能
+                            includeSelectAllOption: true, // 啟用全選/全取消功能
+                            enableCaseInsensitiveFiltering: true, // 啟用大小寫不敏感的搜尋
+                            selectAllText: '全選', // 全選按鈕的文字
+                            selectAllValue: 'multiselect-all', // 全選按鈕的值
+                            filterPlaceholder: '搜尋', // 搜尋框的提示文字
+                            nonSelectedText: '未選擇', // 沒有選中任何選項時的提示文字
+                            allSelectedText: '全部選擇', // 全部選中時的提示文字
+                            //autoWidth: true, // 啟用自動調整寬度功能
+                            maxHeight: 500, //設置選項的最大高度
+                            buttonWidth: '250px',
+                        });
+                        // 結束計時
+                        console.timeEnd();
+
+                        // 開始計時
+                        console.time();
+                        // 預設全選並更新項目
+                        $('#' + DropdownID).multiselect('selectAll', false);
+                        $('#' + DropdownID).multiselect('updateButtonText');
+                        // 結束計時
+                        console.timeEnd();
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        //$("#table-container").text("請求失敗：" + error);
+                        dropdownContainer.innerHTML = "";
+                    }
+                });
+
+            } else {
+                // 如果checkbox沒有被勾選，移除下拉式選單元素
+                //dropdownContainer.innerHTML = "";
+                $('.' + ClassID).empty();
+            }
+        }
+
+        // General Condition Filter API
+        // EX: 'CheckBoxUPH', 'UPH', 'Class_UPH_Textbox_Num', 'uph'
+        function Condition_Filter_General(CheckBoxID, Title, ClassID, element_parameter) {
+
+            var dateInput = document.getElementById("date-input").value;
+            console.log(dateInput);
+            var dateOutput = document.getElementById("date-output").value;
+            console.log(dateOutput);
+            // 將 日期 轉換成物件
+            var dateObj = { Date1: dateInput, Date2: dateOutput, size: "10000" }; // 要傳送的資料，這裡使用一個 JSON 物件
+
+            // 取得回拋參數名稱
+            var DropdowncheckedObj = {};
+            DropdowncheckedObj[element_parameter] = "123";
+
+            // 合併 checkedObj 與 dataToSend
+            var dataToSend = Object.assign({}, dateObj, DropdowncheckedObj);
+            // 最終的資料
+            console.log(dataToSend);
+
+            // 取得checkbox元素
+            var checkboxstatus = document.getElementById(CheckBoxID);
+
+            // 如果checkbox被勾選，建立下拉式選單
+            if (checkboxstatus.checked) {
+
+                // 創建Condition Filter 於Class
+                var newClass = $('<div>').css('white-space', 'nowrap').append(
+                    $('<h3>').text(Title),
+                    $('<input>').attr({
+                        type: 'number',
+                        id: element_parameter + '_minNumber',
+                        name: 'min_max_num_textbox',
+                        step: '0.001' // 設置小數點位數
+                    }).css({
+                        'background-color': 'rgb(0, 123, 255)', // 設置接近藍色的背景顏色
+                        'color': 'white', // 設置字體顏色
+                        'width': '100px',
+                        'border': 'none',
+                        'border-radius': '5px',
+                    }),
+                    ' < ' + Title + ' < ',
+                    $('<input>').attr({
+                        type: 'number',
+                        id: element_parameter + '_maxNumber',
+                        name: 'min_max_num_textbox',
+                        step: '0.001' // 設置小數點位數
+                    }).css({
+                        'background-color': 'rgb(0, 123, 255)', // 設置接近藍色的背景顏色
+                        'color': 'white', // 設置字體顏色
+                        'width': '100px',
+                        'border': 'none',
+                        'border-radius': '5px',
+                    }),
+                );
+                $('.' + ClassID).append(newClass);
+
+                // 取得下拉式選單容器元素
+                var Condition_Filter_minNumber = document.getElementById(element_parameter + "_minNumber");
+                var Condition_Filter_maxNumber = document.getElementById(element_parameter + "_maxNumber");
+
+                // 清空checkboxlist裡面的選項
+                document.getElementById(element_parameter + "_minNumber").value = "";
+                document.getElementById(element_parameter + "_maxNumber").value = "";
+
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/USE_fulldata"
+
+                $.ajax({
+                    url: URL, // 要請求的 API 網址
+                    type: "POST", // 使用 POST 方法
+                    data: dataToSend, // 傳送的資料
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (data) {
+
+                        // 開始計時
+                        console.time();
+                        var data_array = [];
+                        $.each(data.data, function (index, element) {
+                            var value = element[element_parameter];
+                            data_array[index] = value;
+                        });
+                        // 結束計時
+                        console.timeEnd();
+
+                        //console.log(data_array);
+
+                        var minNumber = Math.min.apply(null, data_array);
+                        var maxNumber = Math.max.apply(null, data_array);
+
+                        console.log(minNumber);
+                        console.log(maxNumber);
+
+                        Condition_Filter_minNumber.value = minNumber;
+                        Condition_Filter_maxNumber.value = maxNumber;
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        //$("#table-container").text("請求失敗：" + error);
+                        Condition_Filter_minNumber.innerHTML = "";
+                        Condition_Filter_maxNumber.innerHTML = "";
+                    }
+                });
+
+            } else {
+                // 如果checkbox沒有被勾選，移除下拉式選單元素
+                //dropdownContainer.innerHTML = "";
+                $('.' + ClassID).empty();
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            // 取得今天日期
+            var today = new Date();
+            // 往前推算一個月
+            var oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            // 將日期格式轉換為 YYYY-MM-DD 的字串格式
+            var todayStr = today.toISOString().slice(0, 10);
+            var oneMonthAgoStr = oneMonthAgo.toISOString().slice(0, 10);
+            // 將日期填入對應的輸入框中
+            document.getElementById("date-input").value = oneMonthAgoStr;
+            document.getElementById("date-output").value = todayStr;
+
+
+            // 當按鈕點擊時觸發 AJAX POST 請求
+            //var aaaDataTable;
+            $("#btnDataTable").click(function () {
+                //table = $('#table-container');
+                //aaaDataTable = $('#table-container').Datatable();
+                //var aaaDataTable = $('#table-container').DataTable();
+
+                var aaaDataTable = $('#table-container').DataTable({
+                    "columns": [
+                        null,
+                        null,
+                        null
+                    ]
+                });
+
+                //var URL = "https://dct_tester.kh.asegroup.com:59102/api/UPH_Diff_Api1"
+                //var dataToSend = { Date1: dateInput, Date2: dateOutput, size: "10" }; // 要傳送的資料，這裡使用一個 JSON 物件
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/USE_filter"
+
+                // 取得日期
+                var dateInput = document.getElementById("date-input").value;
+                console.log(dateInput);
+                var dateOutput = document.getElementById("date-output").value;
+                console.log(dateOutput);
+                // 將 日期 轉換成 物件
+                var dateObj = { Date1: dateInput, Date2: dateOutput, size: "10000" }; // 要傳送的資料，這裡使用一個 JSON 物件
+                console.log(dateObj);
+
+                // 取得勾選項目
+                var checkboxes = document.getElementsByName("dctcheckboxlist_multiselect");
+                var checkedObj_multiselect = {};
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        var selectedValues = $('#' + checkboxes[i].value + '-options').val();
+                        //console.log(selectedValues);
+                        checkedObj_multiselect[checkboxes[i].value] = selectedValues;
+                        console.log(checkedObj_multiselect);
+                    }
+                }
+
+                // 取得勾選項目
+                var checkboxes_textbox = document.getElementsByName("dctcheckboxlist_textbox");
+                var checkedObj_textbox = {};
+                for (var i = 0; i < checkboxes_textbox.length; i++) {
+                    if (checkboxes_textbox[i].checked) {
+                        var selectedValues = {};
+                        selectedValues[0] = $('#' + checkboxes_textbox[i].value + '_minNumber').val();
+                        selectedValues[1] = $('#' + checkboxes_textbox[i].value + '_maxNumber').val();
+                        //console.log(selectedValues);
+                        checkedObj_textbox[checkboxes_textbox[i].value] = selectedValues;
+                        console.log(checkedObj_textbox);
+                    }
+                }
+
+                // 合併 checkedObj 與 dataToSend
+                var dataToSend = Object.assign({}, dateObj, checkedObj_multiselect, checkedObj_textbox);
+                // 最終的資料
+                console.log(dataToSend);
+
+                /*
+                // Example : https://dct_tester.kh.asegroup.com:59102/api/UPH_Diff_Api1?Date1=2023-04-01&Date2=2023-05-01&size=10
+                // 定義參數物件
+                var params = {
+                    Date1: dateInput,
+                    Date2: dateOutput,
+                    size: "10"
+                };
+
+                var URL = "https://dct_tester.kh.asegroup.com:59102/api/UPH_Diff_Api1?" + Object.keys(params).map(function (key) {
+                    return key + "=" + params[key];
+                }).join("&");
+                */
+
+                /*
+                var headerArr = [
+                    "Machine ID",
+                    "Count Greater TP",
+                    "Per Site UPH"
+                ];
+
+                var headerObjArr = [];
+                $.each(headerArr, function (index, value) {
+                    var headerObj = { title: value };
+                    headerObjArr.push(headerObj);
+                });
+
+                aaaDataTable = $('#table-container').DataTable({
+                    columns: headerObjArr
+                });
+                */
+                /*
+                aaaDataTable = $('#table-container').DataTable({
+                    // 使用columns選項指定表頭(header)
+                    columns: [
+                        { title: "Machine ID" },
+                        { title: "Count Greater TP" },
+                        { title: "Per Site UPH" }
+                    ]
+                });
+                */
+
+                $.ajax({
+                    url: URL, // 要請求的 API 網址
+                    //type: "GET", // 使用 POST 方法
+                    type: "POST", // 使用 POST 方法
+                    data: dataToSend, // 傳送的資料
+                    dataType: "json", // 回傳的資料類型是 JSON 格式
+                    success: function (data) {
+                        // 當請求成功時，將回傳的資料顯示在 result 元素中
+                        //$("#result4").text("成功傳送資料，伺服器回應：" + JSON.stringify(data));
+
+                        console.log(data);
+
+                        if (aaaDataTable) {
+                            aaaDataTable.destroy(); // 銷毀 DataTables 表格
+                            $('#table-container').empty(); // 清空表格內容的 HTML
+                            aaaDataTable = null; // 將 table 變數設為 null，表示表格已被銷毀
+                        }
+
+                        console.log("ajax 1111111111111");
+
+                        // ========== 下載檔案的名稱 ========== //
+                        var today = new Date();
+                        var todayStr = today.toISOString().slice(0, 10);
+                        var filename_temp = "Universal Search Engine_" + todayStr + "_(Security C)";
+
+                        // ========== Start : 取得並填入抬頭 ========== //
+                        // 取得key值
+                        var keys = Object.keys(data.data[0]);
+                        // 取得抬頭
+                        var headerObjArr = [];
+                        $.each(keys, function (index, key) {
+                            var headerObj = { title: key };
+                            headerObjArr.push(headerObj);
+                        });
+                        // 填入抬頭
+                        aaaDataTable = $('#table-container').DataTable({
+                            columns: headerObjArr,
+                            bAutoWidth: true, //自動寬度
+                            dom: "lfrBtip",
+                            //buttons: ["copy", "csv", "excel", "pdf", "print"],
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    text: 'Export to Excel',
+                                    filename: filename_temp
+                                }
+                            ],
+                        });
+                        // ========== End : 取得並填入抬頭 ========== //
+
+                        // ========== Start : 篩選功能 ========== //
+                        var footerHtml = '<tfoot><tr>';
+                        for (var i = 0; i < headerObjArr.length; i++) {
+                            footerHtml += '<th>' + headerObjArr[i] + '</th>';
+                        }
+                        footerHtml += '</tr></tfoot>';
+                        // 將footerHtml插入到表格中
+                        $('#table-container').append(footerHtml);
+
+                        // Setup - add a text input to each footer cell
+                        $('#table-container tfoot th').each(function (i) {
+                            var title = $('#table-container thead th').eq($(this).index()).text();
+                            $(this).html('<input type="text" placeholder="' + title + '" data-index="' + i + '" />');
+                        });
+
+                        // Filter event handler
+                        $(aaaDataTable.table().container()).on('keyup', 'tfoot input', function () {
+                            aaaDataTable
+                                .column($(this).data('index'))
+                                .search(this.value)
+                                .draw();
+                        });
+                        // ========== End : 篩選功能 ========== //
+
+                        console.log("ajax 222222222222");
+
+                        // 填入成員(資料)
+                        $.each(data.data, function (index, element) {
+                            var rowData = [];
+                            $.each(keys, function (index, key) {
+                                rowData.push(element[key]);
+                            });
+                            aaaDataTable.row.add(rowData);
+                        });
+                        aaaDataTable.draw();
+
+                        console.log("ajax 33333333333");
+                    },
+                    error: function (xhr, status, error) {
+                        // 當請求失敗時，顯示錯誤訊息
+                        $("#table-container").text("請求失敗：" + error);
+                    }
+                });
+
+            });
+
+            $("#btnTest").click(function () {
+                var table = $('#table-container').DataTable({
+                    "ajax": "data.json",
+                    "columns": [],
+                    "initComplete": function () {
+                        var api = this.api();
+
+                        // 動態設定表格欄位
+                        var headerObjArr = [
+                            { "title": "Name", "data": "name" },
+                            { "title": "Position", "data": "position" },
+                            { "title": "Office", "data": "office" },
+                            { "title": "Extn.", "data": "extn" },
+                            { "title": "Start date", "data": "start_date" },
+                            { "title": "Salary", "data": "salary" }
+                        ];
+                        api.columns().remove();
+                        api.destroy();
+                        table = $('#table-container').DataTable({
+                            "ajax": "data.json",
+                            "columns": headerObjArr,
+                            "initComplete": function () {
+                                // 欄位過濾器
+                                this.api().columns().every(function () {
+                                    var column = this;
+                                    var select = $('<select><option value=""></option></select>')
+                                        .appendTo($(column.header()).empty())
+                                        .on('change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                                            column
+                                                .search(val ? '^' + val + '$' : '', true, false)
+                                                .draw();
+                                        });
+
+                                    column.data().unique().sort().each(function (d, j) {
+                                        select.append('<option value="' + d + '">' + d + '</option>')
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
